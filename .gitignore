@@ -1,6 +1,7 @@
 
 upload/
-environment/
+venv/
+basic-ui/node_modules
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

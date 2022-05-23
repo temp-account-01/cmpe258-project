@@ -23,37 +23,7 @@ model = None
 def allowed_data_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_DATA_FILE
 
-
-# def allowed_model_file(filename):
-#     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_MODEL_FILE
-
-
-# @app.route('/model-upload', methods=['POST'], endpoint='upload_file')
-# def upload_file():
-#     # check if the post request has the file part
-#     if 'file' not in request.files:
-#         resp = jsonify({'message': 'No file part in the request'})
-#         resp.status_code = 400
-#         return resp
-#     file = request.files['file']
-#     if file.filename == '':
-#         resp = jsonify({'message': 'No file selected for uploading'})
-#         resp.status_code = 400
-#         return resp
-#     if file and allowed_model_file(file.filename):
-#         filename = secure_filename(file.filename)
-#         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#         resp = jsonify({'message': 'File successfully uploaded'})
-#         resp.status_code = 201
-#         ml_model.__init__()
-#         return resp
-#     else:
-#         resp = jsonify({'message': 'Allowed file type is pkl'})
-#         resp.status_code = 400
-#         return resp
-
-
-@app.route('/data-upload', methods=['POST'], endpoint='upload_data_file')
+@app.route('/predict', methods=['POST'], endpoint='upload_data_file')
 def upload_data_file():
     # check if the post request has the file part
     if 'Image' not in request.files:
@@ -61,9 +31,6 @@ def upload_data_file():
         resp.status_code = 400
         return resp
     file = request.files.get('Image', '') 
-    # file = file.request.get_data()
-    # print(file)
-    # print(file)
     if file.filename == '':
         resp = jsonify({'message': 'No file selected for uploading'})
         resp.status_code = 400
@@ -72,14 +39,11 @@ def upload_data_file():
         filename = secure_filename(file.filename)
         path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(path)
-        # file = imread(path)
         file = Image.open(path)
         file = file.resize((50,50))
         file = np.array(file).reshape(1,50,50,1)
         print(file)
         print(file.shape)
-        # file = file.reshape([1,50,50,1])
-        # print(file.shape)
         convnet  = CNNModel()
         network = convnet.define_network(file)
         model = tflearn.DNN(network, tensorboard_verbose=0,\
@@ -93,23 +57,6 @@ def upload_data_file():
         resp = jsonify({'message': 'Allowed file type is jpg,jpeg,png'})
         resp.status_code = 400
         return resp
-
-
-# @app.route('/predict', methods=['POST'], endpoint='predict')
-# def predict():
-#     content = request.json
-#     req_model = PredictReq()
-#     try:
-#         result = req_model.load(content)
-#         value = ml_model.predict(result['radius_mean'], result['perimeter_mean'], result['area_mean'],
-#                                  result['concavity_mean'],
-#                                  result['concave_points_mean'], result['radius_worst'], result['perimeter_worst'],
-#                                  result['area_worst'], result['concavity_worst'], result['concave_points_worst'])
-#         response = PredictRes(value)
-#     except ValidationError as err:
-#         return jsonify(err.messages), 400
-#     return response.to_json(), 200
-
 
 if __name__ == '__main__':
     print('init: ML Model...started')
