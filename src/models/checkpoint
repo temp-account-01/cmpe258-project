@@ -1,0 +1,2 @@
+model_checkpoint_path: "C:\\Users\\Checkout\\Documents\\LungCancerDetection-master\\src\\models\\nodule3-classifier.tfl.ckpt-55"
+all_model_checkpoint_paths: "C:\\Users\\Checkout\\Documents\\LungCancerDetection-master\\src\\models\\nodule3-classifier.tfl.ckpt-55"
