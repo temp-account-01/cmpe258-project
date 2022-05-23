@@ -1,4 +1,4 @@
-LungCancerProject
+Lung Cancer Project
 ==============================
 
 
